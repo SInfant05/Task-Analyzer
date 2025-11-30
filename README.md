@@ -54,15 +54,13 @@ Key robustness features include input normalization (date parsing of common form
 
 ## Time Breakdown (approx.)
 
-- Project setup / repo cleanup: 1.0 hour
-- Scoring algorithm design & implementation: 3.0 hours
-- API endpoints & validation: 1.5 hours
-- Frontend (HTML/CSS/JS) + icons: 2.5 hours
-- UX polish and accessibility tweaks: 1.0 hour
-- Tests & refactoring iterations: 1.0 hour
-- Documentation & README: 0.75 hour
+- Project setup / repo cleanup: 20 Minutes
+- Scoring algorithm design & implementation: 1.0 hours
+- API endpoints & validation: 40 Minutes
+- Frontend (HTML/CSS/JS) + icons: 1.0 hours
+- Tests & refactoring iterations: 30 Minutes
+- Documentation & README: 30 Minutes
 
-Total: ~10.75 hours
 
 ---
 
