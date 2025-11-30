@@ -9,6 +9,7 @@ let formTasks = [];
 
 const elements = {
   tabBtns: document.querySelectorAll(".tab-btn"),
+  formTab: document.getElementById("form-tab"),
   jsonTab: document.getElementById("json-tab"),
   taskForm: document.getElementById("task-form"),
   taskList: document.getElementById("task-list"),
