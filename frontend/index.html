@@ -1,0 +1,259 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Task Analyzer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <h1><i class="fas fa-brain"></i> Smart Task Analyzer</h1>
+        <p class="subtitle">
+          Intelligently prioritize your tasks based on urgency, importance, and
+          effort
+        </p>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Left Panel: Input -->
+        <section class="panel input-panel">
+          <div class="panel-header">
+            <h2><i class="fas fa-pen-to-square"></i> Enter Tasks</h2>
+            <div
+              class="strategy-wrapper"
+              style="display: flex; align-items: center; gap: 0.5rem"
+            >
+              <!-- Hidden native select kept for value syncing with the backend JS -->
+              <select
+                id="strategy-select"
+                class="strategy-select visually-hidden"
+                aria-hidden="true"
+              >
+                <option value="smart_balance">Smart Balance</option>
+                <option value="deadline_driven">Deadline Driven</option>
+                <option value="high_impact">High Impact</option>
+                <option value="fastest_wins">Fastest Wins</option>
+              </select>
+
+              <!-- Custom select UI with inline icons -->
+              <div id="custom-select" class="custom-select" data-open="false">
+                <button
+                  id="custom-select-trigger"
+                  class="custom-select-trigger btn btn-secondary"
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                >
+                  <span
+                    id="custom-select-icon"
+                    class="custom-select-icon"
+                    aria-hidden="true"
+                    ><i class="fas fa-balance-scale"></i
+                  ></span>
+                  <span id="custom-select-label" class="custom-select-label"
+                    >Smart Balance</span
+                  >
+                  <i
+                    class="fas fa-caret-down"
+                    aria-hidden="true"
+                    style="margin-left: 0.5rem"
+                  ></i>
+                </button>
+                <ul
+                  id="custom-select-list"
+                  class="custom-select-list"
+                  role="listbox"
+                  tabindex="-1"
+                >
+                  <li
+                    class="custom-select-item"
+                    role="option"
+                    data-value="smart_balance"
+                    tabindex="0"
+                  >
+                    <i class="fas fa-balance-scale"></i> Smart Balance
+                  </li>
+                  <li
+                    class="custom-select-item"
+                    role="option"
+                    data-value="deadline_driven"
+                    tabindex="0"
+                  >
+                    <i class="fas fa-calendar"></i> Deadline Driven
+                  </li>
+                  <li
+                    class="custom-select-item"
+                    role="option"
+                    data-value="high_impact"
+                    tabindex="0"
+                  >
+                    <i class="fas fa-star"></i> High Impact
+                  </li>
+                  <li
+                    class="custom-select-item"
+                    role="option"
+                    data-value="fastest_wins"
+                    tabindex="0"
+                  >
+                    <i class="fas fa-bolt"></i> Fastest Wins
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Method Tabs -->
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="form">Form Input</button>
+            <button class="tab-btn" data-tab="json">JSON Input</button>
+          </div>
+
+          <!-- Form Input -->
+          <div id="form-tab" class="tab-content active">
+            <form id="task-form" class="task-form">
+              <div class="form-group">
+                <label for="title">Task Title *</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  required
+                  placeholder="e.g., Complete project report"
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="due_date">Due Date *</label>
+                  <input type="date" id="due_date" name="due_date" required />
+                </div>
+                <div class="form-group">
+                  <label for="importance">Importance (1-10)</label>
+                  <input
+                    type="number"
+                    id="importance"
+                    name="importance"
+                    min="1"
+                    max="10"
+                    value="5"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="estimated_hours">Estimated Hours</label>
+                <input
+                  type="number"
+                  id="estimated_hours"
+                  name="estimated_hours"
+                  min="1"
+                  value="2"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Add Task
+              </button>
+            </form>
+
+            <!-- Task List -->
+            <div class="task-list-container">
+              <h3>Added Tasks (<span id="task-count">0</span>)</h3>
+              <ul id="task-list" class="task-list"></ul>
+            </div>
+          </div>
+
+          <!-- JSON Input -->
+          <div id="json-tab" class="tab-content">
+            <textarea
+              id="json-input"
+              class="json-textarea"
+              placeholder='[
+  {
+    "title": "Complete project report",
+    "due_date": "2025-01-20",
+    "importance": 8,
+    "estimated_hours": 4
+  },
+  {
+    "title": "Reply to emails",
+    "due_date": "2025-01-15",
+    "importance": 5,
+    "estimated_hours": 1
+  }
+]'
+            ></textarea>
+            <div class="json-help">
+              <details>
+                <summary><i class="fas fa-book"></i> JSON Format Help</summary>
+                <pre>
+{
+  "title": "Task name",
+  "due_date": "YYYY-MM-DD",
+  "importance": 1-10,
+  "estimated_hours": number,
+  "dependencies": []  // optional
+}</pre
+                >
+              </details>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button id="analyze-btn" class="btn btn-primary">
+              <i class="fas fa-magnifying-glass"></i> Analyze Tasks
+            </button>
+            <button id="suggest-btn" class="btn btn-accent">
+              <i class="fas fa-lightbulb"></i> Get Top 3
+            </button>
+            <button id="clear-btn" class="btn btn-outline">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+        </section>
+
+        <!-- Right Panel: Results -->
+        <section class="panel results-panel">
+          <div class="panel-header">
+            <h2><i class="fas fa-chart-bar"></i> Results</h2>
+            <span id="result-count" class="result-count"></span>
+          </div>
+
+          <!-- Loading State -->
+          <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Analyzing tasks...</p>
+          </div>
+
+          <!-- Error State -->
+          <div id="error" class="error-message hidden"></div>
+
+          <!-- Results Container -->
+          <div id="results" class="results-container">
+            <div class="empty-state">
+              <span class="empty-icon"><i class="fas fa-clipboard"></i></span>
+              <p>Add tasks and click "Analyze" to see results</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Smart Task Analyzer v1.0 | Built with Django & JavaScript</p>
+      </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>
